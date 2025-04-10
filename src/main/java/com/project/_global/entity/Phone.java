@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "phones")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Phones {
+public class Phone {
 
     @Id
     @GeneratedValue

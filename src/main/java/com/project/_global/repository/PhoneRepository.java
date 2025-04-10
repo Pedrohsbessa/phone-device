@@ -5,9 +5,9 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.project._global.entity.Phones;
+import com.project._global.entity.Phone;
 
 @Repository
-public interface PhonesRepository extends JpaRepository<Phones, UUID> {
+public interface PhoneRepository extends JpaRepository<Phone, UUID> {
 
 }
