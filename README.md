@@ -1,4 +1,4 @@
-# Phone Inventory Management System
+# 1Global Phone Device Registration
 
 A robust Spring Boot application for managing phone inventory with PostgreSQL database, implementing a clean architecture pattern and RESTful API principles.
 
