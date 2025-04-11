@@ -4,13 +4,15 @@ import java.util.List;
 import java.util.UUID;
 
 import com.project._global.entity.Phone;
+import com.project._global.entity.DTO.PhoneCreateDTO;
+import com.project._global.entity.DTO.PhoneUpdateDTO;
 
 public interface PhoneService {
-    Phone createDevice(Phone phone);
+    Phone createDevice(PhoneCreateDTO phone);
 
-    Phone updateDevice(UUID id, Phone phone);
+    Phone updateDevice(UUID id, PhoneUpdateDTO dto);
 
-    Phone partialUpdate(UUID id, Phone phone);
+    Phone partialUpdate(UUID id, PhoneUpdateDTO dto);
 
     Phone getDeviceById(UUID id);
 
