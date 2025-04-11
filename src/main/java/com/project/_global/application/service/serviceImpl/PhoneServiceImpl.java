@@ -49,27 +49,19 @@ public class PhoneServiceImpl implements PhoneService {
     @Override
     public ApiResponse<Phone> updateDevice(UUID id, PhoneUpdateDTO dto) {
         log.info("Updating phone device with id: {}", id);
-
         Phone phone = findPhoneById(id);
         validateUpdateOperation(phone, dto);
-
-        updatePhoneFields(phone, dto);
-        Phone updated = repository.save(phone);
-
-        return buildApiResponse(true, updated, "Phone updated successfully");
+        updatePhoneFields(phone, dto, false);
+        return buildApiResponse(true, repository.save(phone), "Phone updated successfully");
     }
 
     @Override
     public ApiResponse<Phone> partialUpdate(UUID id, PhoneUpdateDTO dto) {
         log.info("Partially updating phone device with id: {}", id);
-
         Phone phone = findPhoneById(id);
         validatePartialUpdateOperation(phone, dto);
-
-        updatePhoneFieldsIfPresent(phone, dto);
-        Phone updated = repository.save(phone);
-
-        return buildApiResponse(true, updated, "Phone partially updated successfully");
+        updatePhoneFields(phone, dto, true);
+        return buildApiResponse(true, repository.save(phone), "Phone partially updated successfully");
     }
 
     @Override
@@ -128,7 +120,7 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     private void validateUpdateOperation(Phone phone, PhoneUpdateDTO dto) {
-        if (phone.isInUse()) {
+        if (!phone.canBeUpdated()) {
             throw new PhoneInUseException("Cannot update name or brand of a device in use");
         }
     }
@@ -140,28 +132,28 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     private void validateDeleteOperation(Phone phone) {
-        if (phone.isInUse()) {
+        if (!phone.canBeDeleted()) {
             throw new PhoneInUseException("Cannot delete a device that is in use");
         }
     }
 
-    private void updatePhoneFields(Phone phone, PhoneUpdateDTO dto) {
-        phone.setName(dto.getName());
-        phone.setBrand(dto.getBrand());
-        if (dto.getState() != null) {
-            phone.setState(PhoneState.valueOf(dto.getState()));
-        }
-    }
-
-    private void updatePhoneFieldsIfPresent(Phone phone, PhoneUpdateDTO dto) {
-        if (dto.getName() != null) {
+    private void updatePhoneFields(Phone phone, PhoneUpdateDTO dto, boolean partial) {
+        if (!partial) {
             phone.setName(dto.getName());
-        }
-        if (dto.getBrand() != null) {
             phone.setBrand(dto.getBrand());
+        } else {
+            if (dto.getName() != null) {
+                phone.setName(dto.getName());
+            }
+            if (dto.getBrand() != null) {
+                phone.setBrand(dto.getBrand());
+            }
         }
+
         if (dto.getState() != null) {
-            phone.setState(PhoneState.valueOf(dto.getState()));
+            PhoneState newState = PhoneState.valueOf(dto.getState());
+            phone.validateStateTransition(newState);
+            phone.setState(newState);
         }
     }
 

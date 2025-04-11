@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.project._global.common.exception.PhoneInUseException;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -50,4 +52,20 @@ public class Phone {
         return PhoneState.IN_USE.equals(this.state);
     }
 
+    public boolean canBeUpdated() {
+        return !isInUse();
+    }
+
+    public boolean canBeDeleted() {
+        return !isInUse();
+    }
+
+    public void validateStateTransition(PhoneState newState) {
+        if (this.state == PhoneState.IN_USE && newState != PhoneState.INACTIVE) {
+            throw new PhoneInUseException("Device in use can only transition to INACTIVE state");
+        }
+        if (this.state == PhoneState.INACTIVE && newState != PhoneState.AVAILABLE) {
+            throw new PhoneInUseException("Inactive device can only transition to AVAILABLE state");
+        }
+    }
 }
