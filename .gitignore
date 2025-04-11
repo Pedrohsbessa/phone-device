@@ -1,4 +1,4 @@
-ignore
+gitignore
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
@@ -25,3 +25,7 @@ target/
 
 ### Docker Volumes ###
 postgres_data/
+
+### Outros ###
+*.log
+.env

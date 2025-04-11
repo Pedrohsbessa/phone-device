@@ -1,0 +1,53 @@
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.mockito.Mockito;
+
+class PhoneIntegrationTest {
+
+    @Test
+    void testSuccessfulDataRetrieval() {
+        // Setup mock repository and service
+        PhoneRepository mockRepository = Mockito.mock(PhoneRepository.class);
+        PhoneService phoneService = new PhoneService(mockRepository);
+        
+        Phone expectedPhone = new Phone("1234567890", "iPhone", "Apple");
+        Mockito.when(mockRepository.findById("1234567890")).thenReturn(expectedPhone);
+        
+        // Execute the service method
+        Phone actualPhone = phoneService.getPhoneById("1234567890");
+        
+        // Verify the result
+        assertEquals(expectedPhone, actualPhone);
+    }
+
+    @Test
+    void testDataPersistence() {
+        // Setup mock repository
+        PhoneRepository mockRepository = Mockito.mock(PhoneRepository.class);
+        PhoneService phoneService = new PhoneService(mockRepository);
+        
+        Phone newPhone = new Phone("0987654321", "Galaxy", "Samsung");
+        
+        // Execute the service method
+        phoneService.savePhone(newPhone);
+        
+        // Verify that the repository's save method was called
+        Mockito.verify(mockRepository).save(newPhone);
+    }
+
+    @Test
+    void testErrorHandling() {
+        // Setup mock repository
+        PhoneRepository mockRepository = Mockito.mock(PhoneRepository.class);
+        PhoneService phoneService = new PhoneService(mockRepository);
+        
+        Mockito.when(mockRepository.findById("invalid_id")).thenThrow(new RuntimeException("Phone not found"));
+        
+        // Execute the service method and verify exception
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            phoneService.getPhoneById("invalid_id");
+        });
+        
+        assertEquals("Phone not found", exception.getMessage());
+    }
+}

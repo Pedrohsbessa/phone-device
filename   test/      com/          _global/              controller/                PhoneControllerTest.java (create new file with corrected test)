@@ -1,0 +1,33 @@
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+class PhoneControllerTest {
+
+    @Test
+    void testValidPhoneNumber() {
+        PhoneController controller = new PhoneController();
+        String result = controller.validatePhoneNumber("123-456-7890");
+        assertTrue(result.equals("Valid"), "The phone number should be valid.");
+    }
+
+    @Test
+    void testInvalidPhoneNumber() {
+        PhoneController controller = new PhoneController();
+        String result = controller.validatePhoneNumber("12345");
+        assertTrue(result.equals("Invalid"), "The phone number should be invalid.");
+    }
+
+    @Test
+    void testNullPhoneNumber() {
+        PhoneController controller = new PhoneController();
+        String result = controller.validatePhoneNumber(null);
+        assertTrue(result.equals("Invalid"), "The phone number should be invalid when null.");
+    }
+
+    @Test
+    void testEmptyPhoneNumber() {
+        PhoneController controller = new PhoneController();
+        String result = controller.validatePhoneNumber("");
+        assertTrue(result.equals("Invalid"), "The phone number should be invalid when empty.");
+    }
+}

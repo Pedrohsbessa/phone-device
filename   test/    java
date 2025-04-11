@@ -1,0 +1,43 @@
+const PhoneRepository = require('../repository/PhoneRepository');
+
+describe('PhoneRepository', () => {
+    let phoneRepository;
+
+    beforeEach(() => {
+        phoneRepository = new PhoneRepository();
+    });
+
+    test('should save a phone', () => {
+        const phone = { id: 1, model: 'iPhone', brand: 'Apple' };
+        phoneRepository.save(phone);
+        expect(phoneRepository.findById(1)).toEqual(phone);
+    });
+
+    test('should find a phone by id', () => {
+        const phone = { id: 2, model: 'Galaxy', brand: 'Samsung' };
+        phoneRepository.save(phone);
+        expect(phoneRepository.findById(2)).toEqual(phone);
+    });
+
+    test('should return null for non-existing phone', () => {
+        expect(phoneRepository.findById(999)).toBeNull();
+    });
+
+    test('should update a phone', () => {
+        const phone = { id: 3, model: 'Pixel', brand: 'Google' };
+        phoneRepository.save(phone);
+        phoneRepository.update({ id: 3, model: 'Pixel 5', brand: 'Google' });
+        expect(phoneRepository.findById(3).model).toBe('Pixel 5');
+    });
+
+    test('should delete a phone', () => {
+        const phone = { id: 4, model: 'OnePlus', brand: 'OnePlus' };
+        phoneRepository.save(phone);
+        phoneRepository.delete(4);
+        expect(phoneRepository.findById(4)).toBeNull();
+    });
+
+    test('should handle errors when saving invalid phone', () => {
+        expect(() => phoneRepository.save(null)).toThrow('Invalid phone data');
+    });
+});

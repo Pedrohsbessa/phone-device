@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project._global.application.DTO.PhoneCreateDTO;
 import com.project._global.application.DTO.PhoneUpdateDTO;
+import com.project._global.application.response.ApiResponse;
 import com.project._global.application.service.PhoneService;
 import com.project._global.domain.entity.Phone;
 import com.project._global.domain.entity.PhoneState;
@@ -48,7 +49,7 @@ public class PhoneController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     @PostMapping
-    public ResponseEntity<com.project._global.application.response.ApiResponse<Phone>> createPhone(
+    public ResponseEntity<ApiResponse<Phone>> createPhone(
             @Parameter(description = "Phone data to create", required = true) @Valid @RequestBody PhoneCreateDTO dto) {
         log.info("Creating new phone with data: {}", dto);
         com.project._global.application.response.ApiResponse<Phone> response = phoneService.createDevice(dto);
@@ -62,11 +63,11 @@ public class PhoneController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "409", description = "Cannot update phone that is in use")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<com.project._global.application.response.ApiResponse<Phone>> updatePhone(
+    public ResponseEntity<ApiResponse<Phone>> updatePhone(
             @Parameter(description = "Phone ID", required = true) @PathVariable UUID id,
             @Parameter(description = "Updated phone data", required = true) @Valid @RequestBody PhoneUpdateDTO dto) {
         log.info("Updating phone with id: {} and data: {}", id, dto);
-        com.project._global.application.response.ApiResponse<Phone> response = phoneService.updateDevice(id, dto);
+        ApiResponse<Phone> response = phoneService.updateDevice(id, dto);
         return ResponseEntity.ok(response);
     }
 
@@ -77,11 +78,11 @@ public class PhoneController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "409", description = "Cannot update phone that is in use")
     })
     @PatchMapping("/{id}")
-    public ResponseEntity<com.project._global.application.response.ApiResponse<Phone>> partialUpdatePhone(
+    public ResponseEntity<ApiResponse<Phone>> partialUpdatePhone(
             @Parameter(description = "Phone ID", required = true) @PathVariable UUID id,
             @Parameter(description = "Partial phone data to update", required = true) @Valid @RequestBody PhoneUpdateDTO dto) {
         log.info("Partially updating phone with id: {} and data: {}", id, dto);
-        com.project._global.application.response.ApiResponse<Phone> response = phoneService.partialUpdate(id, dto);
+        ApiResponse<Phone> response = phoneService.partialUpdate(id, dto);
         return ResponseEntity.ok(response);
     }
 
@@ -91,10 +92,10 @@ public class PhoneController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Phone not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<com.project._global.application.response.ApiResponse<Phone>> getPhoneById(
+    public ResponseEntity<ApiResponse<Phone>> getPhoneById(
             @Parameter(description = "Phone ID", required = true) @PathVariable UUID id) {
         log.info("Fetching phone with id: {}", id);
-        com.project._global.application.response.ApiResponse<Phone> response = phoneService.getDeviceById(id);
+        ApiResponse<Phone> response = phoneService.getDeviceById(id);
         return ResponseEntity.ok(response);
     }
 
@@ -103,13 +104,13 @@ public class PhoneController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "List of phones retrieved successfully")
     })
     @GetMapping
-    public ResponseEntity<com.project._global.application.response.ApiResponse<Page<Phone>>> getAllPhones(
+    public ResponseEntity<ApiResponse<Page<Phone>>> getAllPhones(
             @Parameter(description = "Filter by brand (optional)") @RequestParam(required = false) String brand,
             @Parameter(description = "Filter by state (optional)") @RequestParam(required = false) PhoneState state,
             @Parameter(description = "Pagination and sorting parameters") Pageable pageable) {
         log.info("Fetching phones with filters - brand: {}, state: {}", brand, state);
 
-        com.project._global.application.response.ApiResponse<Page<Phone>> response;
+        ApiResponse<Page<Phone>> response;
         if (brand != null) {
             response = phoneService.getAllDevicesByBrand(brand, pageable);
         } else if (state != null) {
@@ -128,10 +129,10 @@ public class PhoneController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "409", description = "Cannot delete a phone that is in use")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<com.project._global.application.response.ApiResponse<Void>> deletePhone(
+    public ResponseEntity<ApiResponse<Void>> deletePhone(
             @Parameter(description = "Phone ID", required = true) @PathVariable UUID id) {
         log.info("Deleting phone with id: {}", id);
-        com.project._global.application.response.ApiResponse<Void> response = phoneService.deleteDevice(id);
+        ApiResponse<Void> response = phoneService.deleteDevice(id);
         return ResponseEntity.ok(response);
     }
 }

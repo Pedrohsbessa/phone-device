@@ -1,0 +1,46 @@
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+class PhoneRepositoryTest {
+
+    @Test
+    void testAddPhone() {
+        PhoneRepository repository = new PhoneRepository();
+        Phone phone = new Phone("1234567890");
+        repository.addPhone(phone);
+        assertEquals(phone, repository.getPhone("1234567890"));
+    }
+
+    @Test
+    void testGetPhoneNotFound() {
+        PhoneRepository repository = new PhoneRepository();
+        assertNull(repository.getPhone("nonexistent"));
+    }
+
+    @Test
+    void testRemovePhone() {
+        PhoneRepository repository = new PhoneRepository();
+        Phone phone = new Phone("1234567890");
+        repository.addPhone(phone);
+        repository.removePhone("1234567890");
+        assertNull(repository.getPhone("1234567890"));
+    }
+
+    @Test
+    void testUpdatePhone() {
+        PhoneRepository repository = new PhoneRepository();
+        Phone phone = new Phone("1234567890");
+        repository.addPhone(phone);
+        Phone updatedPhone = new Phone("1234567890", "Updated Owner");
+        repository.updatePhone(updatedPhone);
+        assertEquals(updatedPhone, repository.getPhone("1234567890"));
+    }
+
+    @Test
+    void testAddPhoneDuplicate() {
+        PhoneRepository repository = new PhoneRepository();
+        Phone phone = new Phone("1234567890");
+        repository.addPhone(phone);
+        assertThrows(IllegalArgumentException.class, () -> repository.addPhone(phone));
+    }
+}

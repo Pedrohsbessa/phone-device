@@ -1,0 +1,25 @@
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+class PhoneControllerTest {
+
+    @Test
+    void testPhoneIntegration() {
+        // Assuming PhoneController has a method called integratePhone
+        PhoneController controller = new PhoneController();
+        String result = controller.integratePhone("1234567890");
+        
+        assertNotNull(result);
+        assertEquals("Integration successful", result);
+    }
+
+    @Test
+    void testInvalidPhoneNumber() {
+        PhoneController controller = new PhoneController();
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            controller.integratePhone("invalid");
+        });
+        
+        assertEquals("Invalid phone number", exception.getMessage());
+    }
+}
